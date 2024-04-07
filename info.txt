@@ -45,7 +45,7 @@ aka: 4 byte or 32 bit
 0x04: DEC - dec a, 0x0001      - Decrement Register by Value
 0x05: DER - der a, b           - Decrement Register by Register
 0x06: DIV - div a, 0x0001      - Divide Register by Value
-0x07: DIR - dir a, b 	       - DIvide Register by Register
+0x07: DIR - dir a, b 	   - DIvide Register by Register
 0x08: SET - set a, 0x0001      - Set Register to Value
 0x09: JMP - jmp 0x0001         - Jump to other Part of Program
 0x0A: JMR - jmr a              - Jump with Address from Register
@@ -65,9 +65,6 @@ aka: 4 byte or 32 bit
 0x18: MER - mer a, b           - Store Register in RAM (Address by Register)
 0x19: LEM - lem a, 0x0001      - Load Value from RAM (Address by Value)
 0x1A: LER - ler a, b           - Load Value from RAM (Address by Register)
-0x1B: RET - ret                - return back from the last jump
-0x1C: XRA - xra 0x001          - execute ram instead of rom
-0x1D: XRO - xro 0x0001 	       - execute rom instead of ram
 
 == Microinstructions ==
 
