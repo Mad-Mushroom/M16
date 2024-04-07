@@ -1,0 +1,102 @@
+=== M16 ===
+-----------
+
+== Regs ==
+
+0x01: A - General purpose
+0x02: B - General purpose
+0x03: C - General purpose
+0x04: D - General purpose
+0x05: F - ALU flags
+0x06: M - Memory address
+0x07: I - Instruction address register
+
+== Memory Layout ==
+|--------------------------------|
+|******#################@@@@@@@@@|
+|--------------------------------|
+
+* Program Memory - 12288 Words, from 0x0000 - 0x3000
+# General Purpose - 36864 Words, from 0x3000 - 0xC000
+@ Video RAM - 16384 Words, from  0xC000 - 0xFFFF
+
+== Video ==
+= Bitmap =
+In Bitmap mode, you canjust write the pixels directly to the VRAM (0xC000 - 0xFFFF). The Screen is 128x128 Pixels, therefore the VRAM is 16384 words.
+Each Pixel is stored in 5-Bit RGB, so:
+RRRRR GGGGG BBBBB
+
+== I/O Ports ==
+0x01: General Output 	- Output 	- 16-Bit
+0x02: General Input 	- Input 	- 16-Bit
+0x03: Interrupt 	- Input 	- 16-Bit
+
+== Instructions ==
+
+Instruction: 0x00000000
+aka: 4 byte or 32 bit
+8-bit: 0x00            0x00                  0x00                  0x00
+       => INSTRUCTION  => Register 1 | Data  => Register 2 | Data  => Data
+
+0x00: NOP - nop                - No operation
+0x01: HLT - hlt                - Halt the CPU
+0x02: ADD - add a, 0x0001      - Adds Register by Value
+0x03: ADR - add a, b           - Adds Register by Register
+0x04: DEC - dec a, 0x0001      - Decrement Register by Value
+0x05: DER - der a, b           - Decrement Register by Register
+0x06: DIV - div a, 0x0001      - Divide Register by Value
+0x07: DIR - dir a, b 	       - DIvide Register by Register
+0x08: SET - set a, 0x0001      - Set Register to Value
+0x09: JMP - jmp 0x0001         - Jump to other Part of Program
+0x0A: JMR - jmr a              - Jump with Address from Register
+0x0B: JMZ - jmz 0x0001         - Jump if zero
+0x0C: JNZ - jnz 0x0001         - Jump if not zero
+0x0D: JMO - jmo 0x0001         - Jump if overflow
+0x0E: CMP - cmp a, 0x0001      - Compare Register to Value
+0x0F: CMR - cmr a, b           - Compare Register to Register
+0x10: JE  - je 0x0001          - Jump if Compare succeeded
+0x11: INB - inb a              - Take Input
+0x12: OUB - oub 0x0001         - Output Value
+0x13: OUR - our a              - Output Register
+0x14: SIN - sin a              - Take Input from the second input
+0x15: SOU - sou 0x0001         - Output Value on the second output
+0x16: SOR - sor a              - Output Register on second output
+0x17: MEM - mem a, 0x0001      - Store Register in RAM (Address by Value)
+0x18: MER - mer a, b           - Store Register in RAM (Address by Register)
+0x19: LEM - lem a, 0x0001      - Load Value from RAM (Address by Value)
+0x1A: LER - ler a, b           - Load Value from RAM (Address by Register)
+0x1B: RET - ret                - return back from the last jump
+0x1C: XRA - xra 0x001          - execute ram instead of rom
+0x1D: XRO - xro 0x0001 	       - execute rom instead of ram
+
+== Microinstructions ==
+
+= Read =
+rl - read lower register
+ru - read upper register
+rm - read memory
+ri - read from input
+ra - read ALU
+= Write =
+wl - write lower register
+wu - write upper register
+wm - write memory (address in register M)
+mw - write to register M
+wo - write to output
+wi - write to register I
+= ALU =
+aa - enable add in ALU
+as - enable sub in ALU
+ad - enable div in ALU
+= Instruction =
+li - read lower 16-Bits of instruction data
+ui - read upper 16-Bits of instruction data
+= Other =
+ei - end instruction
+hl - halt the cpu
+
+== Microinstructions / Instructions ==
+NOP - ei
+HLT - hl
+ADD - aa, rl -> ui -> ra, wl -> ei
+ADR - aa, rl -> ru -> ra, wl -> ei
